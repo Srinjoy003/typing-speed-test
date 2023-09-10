@@ -1,6 +1,6 @@
 import { NumKey, LetterKey, SpecialKey } from "./Key";
 
-function MainKeyBoard() {
+function KeyBoard() {
   return (
     <div className="flex flex-col w-3/4 bg-gray-600 h-96 ">
       <div className="h-fit w-fit">
@@ -84,4 +84,4 @@ function MainKeyBoard() {
   );
 }
 
-export default MainKeyBoard;
+export default KeyBoard;
