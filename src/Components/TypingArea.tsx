@@ -75,10 +75,13 @@ function TypingArea() {
     let randomIndex = Math.floor(Math.random() * len) % wordCount;
     wordList.push(randomWords[randomIndex]);
     wordList.push("␣");
+    //wordList.push("");
+
+
   }
 
   wordList.pop();
-  let lineList = LineSeparator(wordList, 40);
+  let lineList = LineSeparator(wordList, 60);
 
   let finalList = CharacterSeparator(lineList);
   let finalDiv = finalList.map((subArray, rowIndex) => {
@@ -97,7 +100,10 @@ function TypingArea() {
   // console.log(finalList.slice(0, 2));
 
   return (
-    <div className="flex flex-col w-3/4 h-3/4">{finalDiv}</div>
+    <>
+    <input type="text" className="absolute w-40 h-40 bg-gray-300 left-10"></input>
+    <div className="flex flex-col w-fit h-fit">{finalDiv}</div>
+    </>
   );
 }
 

@@ -5,11 +5,9 @@ import { NumKey } from "./Components/Key.tsx";
 
 function App() {
   return (
-    <div className="flex items-center justify-center w-screen h-screen bg-amber-50">
-      {/* <TypingArea /> */}
+    <div className="flex flex-col items-center justify-center w-screen h-screen gap-10 bg-amber-50">
+      <TypingArea />
       <Keyboard />
-     
-
     </div>
   );
 }
