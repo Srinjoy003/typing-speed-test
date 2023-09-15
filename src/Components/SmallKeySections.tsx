@@ -3,6 +3,7 @@ import { NumKey, LetterKey, SpecialKey, ArrowKey, NumPadKey } from "./Key";
 type AddClassProp = { addClass?: string; textTheme?: string; theme: string; funcTheme?: string; pressedTheme: string, pressedTextTheme?: string };
 
 function ArrowKeyPad({ addClass, theme, textTheme, pressedTheme, pressedTextTheme}: AddClassProp) {
+  
   const modifiedClass = `flex flex-col items-center w-fit h-fit ${addClass || ""}`.trim();
 
   return (

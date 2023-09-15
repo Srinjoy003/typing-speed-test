@@ -1,4 +1,7 @@
+import { useRef } from "react";
 import Cursor from "./cursor";
+
+type textAreaProp = {textColour: string};
 
 function CharacterSeparator(lineList: Array<Array<string>>) {
   let charList = [];
@@ -41,9 +44,9 @@ function LineSeparator(wordList: Array<string>, charCount: number) {
   return lineList;
 }
 
-function cursorPosition(lineList: Array<Array<string>>, )
+// function cursorPosition(lineList: Array<Array<string>>, )
 
-function TypingArea() {
+function TypingArea({textColour}: textAreaProp) {
   const randomWords = [
     "apple",
     "banana",
@@ -89,15 +92,15 @@ function TypingArea() {
 
   wordList.pop();
   
-  let lineList = LineSeparator(wordList, 60).slice(0,4);
+  let lineList = LineSeparator(wordList, 60).slice(0,lineCount);
   let finalList = CharacterSeparator(lineList);
   
   let finalDiv = finalList.map((subArray, rowIndex) => {
     let subSpan = subArray.map((character, colIndex) => {
       return (
-        <span className="text-xl text-gray-400" key={colIndex}>
-          {" "}
-          {character}{" "}
+        <span  key={colIndex}>
+         
+          {character}
         </span>
       );
     });
@@ -105,14 +108,17 @@ function TypingArea() {
     return <span key={rowIndex}> {subSpan} </span>;
   });
 
-  // console.log(finalList.slice(0, 2));
+
+  const textDivRef = useRef(null)
+
+  const modifiedClass = `flex flex-col text-3xl tracking-widest w-fit h-fit ${textColour}`;
+  
 
   return (
     <div className="w-3/4">
       <input type="text" className="absolute hidden w-40 h-40 bg-gray-300 left-10"></input>
-      <div className="flex flex-col w-fit h-fit">{finalDiv}</div>
-      {/* <div className="absolute border-[1.5px] h-6 border-green-950 -translate-y-28"></div> */}
-      <Cursor />
+      <div ref={textDivRef} className={modifiedClass}>{finalDiv}</div>
+      <Cursor textRef={textDivRef}/>
     </div>
   );
 }

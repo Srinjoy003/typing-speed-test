@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 
-type CursorProp = {translatePos?: Array<number>; xJump?: number; newLine?: Array<number>};
+type CursorProp = {textRef ?: any; translatePos?: Array<number>; xJump?: number; newLine?: Array<number>; colour?: string};
   
+// function getTextWidth(text: string) {
+//   const canvas = document.createElement('canvas');
+//   const context = canvas.getContext('2d');
+//   context.font = window.getComputedStyle(textContainer).getPropertyValue('font');
+//   const width = context.measureText(text).width;
+//   return width;
+// }
 
 
-
-function Cursor({translatePos, xJump, newLine}: CursorProp) {
+function Cursor({ xJump, textRef}: CursorProp) {
     const [translateX, setTranslateX] = useState(0);
 
     const jump = xJump || 15;
@@ -32,9 +38,9 @@ function Cursor({translatePos, xJump, newLine}: CursorProp) {
   // Define the style for the div based on translateY
  
 
-    const modifiedClass = "absolute border-[1.5px] h-6 border-green-950";
+    const modifiedClass = "absolute border-[1.5px] h-6 border-arch-cursor";
     return (
-      <div className={modifiedClass} style={{ transform: `translateX(${translateX}px) translateY(-107px)` }}></div>
+      <div className={modifiedClass} style={{ transform: `translateX(${translateX}px) translateY(-133px)` }}></div>
     );
 }
 
