@@ -21,11 +21,11 @@ function MainKeyboard({ addClass, theme, funcTheme, textTheme, pressedTheme, pre
         <NumKey topLetter=")" bottomLetter="0" keyMap="Digit0" theme={theme} pressedTheme={pressedTheme} />
         <NumKey topLetter="_" bottomLetter="-" keyMap="Minus" theme={theme} pressedTheme={pressedTheme} />
         <NumKey topLetter="+" bottomLetter="=" keyMap="Equal" theme={theme} pressedTheme={pressedTheme} />
-        <SpecialKey letter="Backspace" addClassDiv="w-16" keyMap="Backspace" theme={funcTheme} pressedTheme={pressedTheme} />
+        <SpecialKey letter="Backspace" addClassDiv="w-20" keyMap="Backspace" theme={funcTheme} pressedTheme={pressedTheme} />
       </div>
 
       <div className="flex flex-row w-fit">
-        <SpecialKey letter="Tab" addClassDiv="w-12" keyMap="Tab" theme={funcTheme} pressedTheme={pressedTheme} />
+        <SpecialKey letter="Tab" addClassDiv="w-14" keyMap="Tab" theme={funcTheme} pressedTheme={pressedTheme} />
         <LetterKey letter="Q" keyMap="KeyQ" theme={theme} pressedTheme={pressedTheme} />
         <LetterKey letter="W" keyMap="KeyW" theme={theme} pressedTheme={pressedTheme} />
         <LetterKey letter="E" keyMap="KeyE" theme={theme} pressedTheme={pressedTheme} />
@@ -38,7 +38,7 @@ function MainKeyboard({ addClass, theme, funcTheme, textTheme, pressedTheme, pre
         <LetterKey letter="P" keyMap="KeyP" theme={theme} pressedTheme={pressedTheme} />
         <NumKey topLetter="{" bottomLetter="[" keyMap="BracketLeft" theme={theme} pressedTheme={pressedTheme} />
         <NumKey topLetter="}" bottomLetter="]" keyMap="BracketRight" theme={theme} pressedTheme={pressedTheme} />
-        <NumKey topLetter="|" bottomLetter="\" addClassDiv="w-[52px]" addClassText="-translate-x-3" keyMap="Backslash" theme={theme} pressedTheme={pressedTheme} />
+        <NumKey topLetter="|" bottomLetter="\" addClassDiv="w-[64px]" addClassText="-translate-x-3" keyMap="Backslash" theme={theme} pressedTheme={pressedTheme} />
       </div>
       <div className="flex flex-row w-fit">
         <SpecialKey letter="Caps Lock" addClassDiv="w-16" keyMap="CapsLock" theme={funcTheme} pressedTheme={pressedTheme} />
@@ -53,10 +53,10 @@ function MainKeyboard({ addClass, theme, funcTheme, textTheme, pressedTheme, pre
         <LetterKey letter="L" keyMap="KeyL" theme={theme} pressedTheme={pressedTheme} />
         <NumKey topLetter=":" bottomLetter=";" keyMap="Semicolon" theme={theme} pressedTheme={pressedTheme} />
         <NumKey topLetter='"' bottomLetter="'" keyMap="Quote" theme={theme} pressedTheme={pressedTheme} />
-        <SpecialKey letter="Enter" addClassDiv="w-[74px]" keyMap="Enter" theme={funcTheme} pressedTheme={pressedTheme} />
+        <SpecialKey letter="Enter" addClassDiv="w-[98px]" keyMap="Enter" theme={funcTheme} pressedTheme={pressedTheme} />
       </div>
       <div className="flex flex-row w-fit">
-        <SpecialKey letter="Shift" addClassDiv="w-20" keyMap="ShiftLeft" theme={funcTheme} pressedTheme={pressedTheme} />
+        <SpecialKey letter="Shift" addClassDiv="w-24" keyMap="ShiftLeft" theme={funcTheme} pressedTheme={pressedTheme} />
         <LetterKey letter="Z" keyMap="KeyZ" theme={theme} pressedTheme={pressedTheme} />
         <LetterKey letter="X" keyMap="KeyX" theme={theme} pressedTheme={pressedTheme} />
         <LetterKey letter="C" keyMap="KeyC" theme={theme} pressedTheme={pressedTheme} />
@@ -67,15 +67,15 @@ function MainKeyboard({ addClass, theme, funcTheme, textTheme, pressedTheme, pre
         <NumKey topLetter="<" bottomLetter="," keyMap="Comma" theme={theme} pressedTheme={pressedTheme} />
         <NumKey topLetter=">" bottomLetter="." keyMap="Period" theme={theme} pressedTheme={pressedTheme} />
         <NumKey topLetter="?" bottomLetter="/" keyMap="Slash" theme={theme} pressedTheme={pressedTheme} />
-        <SpecialKey letter="Shift" addClassDiv="w-24" keyMap="ShiftRight" theme={funcTheme} pressedTheme={pressedTheme} />
+        <SpecialKey letter="Shift" addClassDiv="w-[108px]" keyMap="ShiftRight" theme={funcTheme} pressedTheme={pressedTheme} />
       </div>
 
       <div className="flex flex-row w-fit">
-        <SpecialKey letter="Ctrl" addClassDiv="w-14" keyMap="ControlLeft" theme={funcTheme} pressedTheme={pressedTheme} />
+        <SpecialKey letter="Ctrl" addClassDiv="w-16" keyMap="ControlLeft" theme={funcTheme} pressedTheme={pressedTheme} />
         <SpecialKey letter="Alt" addClassDiv="w-14" keyMap="AltLeft" theme={funcTheme} pressedTheme={pressedTheme} />
-        <NumKey addClassDiv="w-80" keyMap="Space" theme={funcTheme} pressedTheme={pressedTheme} />
+        <NumKey addClassDiv="w-96" keyMap="Space" theme={funcTheme} pressedTheme={pressedTheme} />
         <SpecialKey letter="Alt" addClassDiv="w-14"keyMap="AltRight" theme={funcTheme} pressedTheme={pressedTheme} />
-        <SpecialKey letter="Ctrl" addClassDiv="w-[62px]" keyMap="ControlRight" theme={funcTheme} pressedTheme={pressedTheme} />
+        <SpecialKey letter="Ctrl" addClassDiv="w-[58px]" keyMap="ControlRight" theme={funcTheme} pressedTheme={pressedTheme} />
       </div>
     </div>
   );

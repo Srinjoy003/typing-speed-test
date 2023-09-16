@@ -108,12 +108,9 @@ function TypingArea({textColour}: textAreaProp) {
     return <span key={rowIndex}> {subSpan} </span>;
   });
 
-
-  const textDivRef = useRef(null)
-
+  const textDivRef = useRef(null);
   const modifiedClass = `flex flex-col text-3xl tracking-widest w-fit h-fit ${textColour}`;
   
-
   return (
     <div className="w-3/4">
       <input type="text" className="absolute hidden w-40 h-40 bg-gray-300 left-10"></input>

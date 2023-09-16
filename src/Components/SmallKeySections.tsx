@@ -66,7 +66,7 @@ function NumPad({ addClass, theme, textTheme, pressedTheme, pressedTextTheme}: A
             <NumPadKey topLetter="6" bottomLetter="🠂" keyMap="Numpad6" theme={theme} pressedTheme={pressedTheme}/>
           </div>
         </div>
-        <NumPadKey bottomLetter="+" addClassDiv="h-18 w-9" addClassBottomText="translate-y-3" keyMap="NumpadAdd" theme={theme} pressedTheme={pressedTheme}/>
+        <NumPadKey bottomLetter="+" addClassDiv="h-18 w-10" addClassBottomText="translate-y-3" keyMap="NumpadAdd" theme={theme} pressedTheme={pressedTheme}/>
       </div>
 
       <div className="flex flex-row"> 
@@ -78,12 +78,12 @@ function NumPad({ addClass, theme, textTheme, pressedTheme, pressedTextTheme}: A
             <NumPadKey topLetter="3" bottomLetter="PgDn" keyMap="Numpad3" theme={theme} pressedTheme={pressedTheme}/>
           </div>
           <div className="flex flex-row w-fit">
-            <NumPadKey topLetter="0" bottomLetter="Ins" addClassDiv="h-9 w-[74px]" addClassTopText="text-left"keyMap="Numpad0" theme={theme} pressedTheme={pressedTheme}/>
+            <NumPadKey topLetter="0" bottomLetter="Ins" addClassDiv="h-10 w-[82px]" addClassTopText="text-left"keyMap="Numpad0" theme={theme} pressedTheme={pressedTheme}/>
             <NumPadKey topLetter="." bottomLetter="Del" keyMap="NumpadDecimal" theme={theme} pressedTheme={pressedTheme}/>
           </div>
         </div>
         
-        <NumPadKey bottomLetter="Enter" addClassDiv="h-18 w-9" addClassBottomText="translate-y-3" keyMap="NumpadEnter" theme={theme} pressedTheme={pressedTheme}/>
+        <NumPadKey bottomLetter="Enter" addClassDiv="h-18 w-10" addClassBottomText="translate-y-3" keyMap="NumpadEnter" theme={theme} pressedTheme={pressedTheme}/>
         
       </div>
 

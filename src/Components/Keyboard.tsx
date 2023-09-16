@@ -5,7 +5,7 @@ type AddClassProp = { addClass?: string; theme: string; funcTheme: string; press
 
 function Keyboard({ addClass, theme, funcTheme, pressedTheme,  backgroundTheme}: AddClassProp) {
   const modifiedClass = `flex flex-col items-center mt-1 ml-0.5 bg-stone-200 h-9 ${addClass || ""}`.trim();
-  const modifiedDivClass = `flex flex-row w-3/5 gap-10 h-52 ${backgroundTheme}`
+  const modifiedDivClass = `flex flex-row w-2/3 gap-6 h-100 ${backgroundTheme}`
 
   return (
     <div className={modifiedDivClass}>
