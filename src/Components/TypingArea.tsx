@@ -31,8 +31,11 @@ function LineSeparator(wordList: Array<string>, charCount: number) {
       if (counter == charCount) {
         let line = wordList.slice(prevIndex, i);
 
-        if (line[line.length - 1] === "␣") 
+        if (line[line.length - 1] === " ") 
           line.pop();
+        
+        if (line[0] == " ")
+          line = line.slice(1);
 
         lineList.push(line);
         counter = j;
@@ -80,13 +83,12 @@ function TypingArea({textColour}: textAreaProp) {
   let wordCount = 36;
   let lineCount = 4;
   let wordList = [];
+  const spaceChar = "&ensp;";
 
   for (let i = 0; i < wordCount; i++) {
     let randomIndex = Math.floor(Math.random() * len) % wordCount;
     wordList.push(randomWords[randomIndex]);
-    wordList.push("␣");
-    //wordList.push("");
-
+    wordList.push(" ");
 
   }
 
@@ -94,27 +96,42 @@ function TypingArea({textColour}: textAreaProp) {
   
   let lineList = LineSeparator(wordList, 60).slice(0,lineCount);
   let finalList = CharacterSeparator(lineList);
+  finalList = finalList.map((row) => {
+    return row.map((str) => {
+      return str.replace(" ", spaceChar);
+    })
+  });
   
   let finalDiv = finalList.map((subArray, rowIndex) => {
     let subSpan = subArray.map((character, colIndex) => {
-      return (
-        <span  key={colIndex}>
-         
-          {character}
-        </span>
-      );
+      
+      if (character === spaceChar) {
+        return (
+        <span key={colIndex} dangerouslySetInnerHTML={{ __html: spaceChar }}></span>);
+      } 
+      
+      else {
+        return (
+          <span key={colIndex}>{character}</span>
+        );
+      }
     });
 
     return <span key={rowIndex}> {subSpan} </span>;
   });
 
+
+
   const textDivRef = useRef(null);
   const modifiedClass = `flex flex-col text-3xl tracking-widest w-fit h-fit ${textColour}`;
+
   
   return (
     <div className="w-3/4">
       <input type="text" className="absolute hidden w-40 h-40 bg-gray-300 left-10"></input>
       <div ref={textDivRef} className={modifiedClass}>{finalDiv}</div>
+
+      
       <Cursor textRef={textDivRef}/>
     </div>
   );

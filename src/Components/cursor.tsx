@@ -68,7 +68,7 @@ function Cursor({ xJump, textRef}: CursorProp) {
   // Define the style for the div based on translateY
  
 
-    const modifiedClass = "absolute border-[1.5px] h-6 border-arch-cursor";
+    const modifiedClass = "absolute border-[1.5px] h-6 border-arch-cursor transition-transform duration-200";
     return (
       <div ref={cursorRef} className={modifiedClass}></div>
     );
