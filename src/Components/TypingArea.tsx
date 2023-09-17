@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Cursor from "./cursor";
 
 type textAreaProp = {textColour: string};
@@ -47,9 +47,8 @@ function LineSeparator(wordList: Array<string>, charCount: number) {
   return lineList;
 }
 
-// function cursorPosition(lineList: Array<Array<string>>, )
-
-function TypingArea({textColour}: textAreaProp) {
+function CreateFinalDiv(){
+  
   const randomWords = [
     "apple",
     "banana",
@@ -120,9 +119,107 @@ function TypingArea({textColour}: textAreaProp) {
     return <span key={rowIndex}> {subSpan} </span>;
   });
 
+  return finalDiv;
+}
 
 
-  const textDivRef = useRef(null);
+function TypingArea({textColour}: textAreaProp) {
+  
+  const [finalDiv, setFinalDiv] = useState(() =>  CreateFinalDiv())
+
+  // let finalDiv = CreateFinalDiv();
+  const textDivRef = useRef<HTMLDivElement | null>(null);
+
+
+  //------------------------------------------------------------------------------------------------------------------
+  
+  // useEffect(() => {
+  //   if (cursorRef.current) {
+  //     cursorRef.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
+  //   }
+  // }, [translateX, translateY]);
+
+  // useEffect(() => {
+  //   const textDiv: HTMLDivElement | null = textDivRef.current;
+    
+  //   if(textDiv){
+  //     const outerSpans = textDiv.querySelectorAll("span"); // Select outer spans
+
+  //     const newWidthList = Array.from(outerSpans).map((outerSpan) => {
+  //       const innerSpans = outerSpan.querySelectorAll("span"); // Select nested spans within the outer span
+  //       const widths = Array.from(innerSpans).map((span) => span.getBoundingClientRect().width);
+  //       return widths.length > 0 ? widths : null;
+  //     }).filter(Boolean); // Filter out null values
+
+  // }
+   
+    
+
+  //   setWidthList(newWidthList);
+
+  
+  // }, [textDivRef]);
+
+
+  
+
+  // useEffect(() => {
+  //   console.log("Effect is running!"); // Add this line
+  //   document.addEventListener("keydown", handleKeyPress);
+    
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //       document.removeEventListener("keydown", handleKeyPress);
+  //   };
+  //   }, [widthList, jumpIndex, lineIndex]);
+
+
+  // const handleKeyPress = (event: KeyboardEvent) => {
+  //   if (event.code === "Space") {
+
+      
+  //     if (lineIndex >= widthList.length) {
+  //       // Reset lineIndex and jumpIndex when we reach the end
+  //       setLineIndex(0);
+  //       setJumpIndex(0);
+  //     }
+  
+  //     const currentLine = widthList[lineIndex];
+  
+  //     if (currentLine && currentLine.length > jumpIndex) {
+  //       setJump(currentLine[jumpIndex]);
+  
+  //       setTranslateX((prevTranslateX) => {
+  //         return prevTranslateX + jump;
+  //       });
+  
+  //       setJumpIndex((curIndex) => {
+  //         return curIndex + 1;
+  //       });
+  
+  //       if (jumpIndex >= currentLine.length - 1) {
+  //         setJumpIndex(0);
+  //         setLineIndex((curLineIndex) => {
+  //           return curLineIndex + 1;
+  //         });
+
+  //         setTranslateY((prevTranslateY) => {
+  //           return prevTranslateY + 37;
+  //         });
+
+  //         setTranslateX(0);
+           
+
+  //       }
+  
+  //       // console.log(lineIndex, jumpIndex, translateX, jump);
+  //     }
+  
+  
+  //   }
+  // };
+
+//---------------------------------------------------------------------------------------------------------------------
   const modifiedClass = `flex flex-col text-3xl tracking-widest w-fit h-fit ${textColour}`;
 
   
