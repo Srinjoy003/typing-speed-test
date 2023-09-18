@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Cursor from "./cursor";
 
 type textAreaProp = { textColour: string };
@@ -88,90 +88,105 @@ function CreateFinalDiv() {
 
 function TypingArea({ textColour }: textAreaProp) {
   const [finalDiv, setFinalDiv] = useState<any>(() => CreateFinalDiv());
-  const [letterIndex, setLetterIndex] = useState(0);
-  const [lineIndex, setLineIndex] = useState(0);
+  // const [letterIndex, setLetterIndex] = useState(0);
+  // const [lineIndex, setLineIndex] = useState(0);
 
   // let finalDiv = CreateFinalDiv();
   const textDivRef = useRef<HTMLDivElement | null>(null);
+  const cursorRef = useRef<HTMLDivElement>(null)
+  
 
   //------------------------------------------------------------------------------------------------------------------
+  const [translateX, setTranslateX] = useState(0);
+  const [translateY, setTranslateY] = useState(-134); //-133 -97
+  const [widthList, setWidthList] = useState<any>([]);
+  const [jumpIndex, setJumpIndex] = useState(0);
+  const [lineIndex, setLineIndex] = useState(0);
 
-  // useEffect(() => {
-  //   if (cursorRef.current) {
-  //     cursorRef.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
-  //   }
-  // }, [translateX, translateY]);
 
-  // useEffect(() => {
-  //   const textDiv: HTMLDivElement | null = textDivRef.current;
 
-  //   if(textDiv){
-  //     const outerSpans = textDiv.querySelectorAll("span"); // Select outer spans
+  const moveCursor = () => {
+    if (cursorRef.current) {
+      cursorRef.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
+    }
+  };  
 
-  //     const newWidthList = Array.from(outerSpans).map((outerSpan) => {
-  //       const innerSpans = outerSpan.querySelectorAll("span"); // Select nested spans within the outer span
-  //       const widths = Array.from(innerSpans).map((span) => span.getBoundingClientRect().width);
-  //       return widths.length > 0 ? widths : null;
-  //     }).filter(Boolean); // Filter out null values
 
-  // }
+  useEffect(() => {
+      moveCursor();
+  }, [translateX, translateY]);
 
-  //   setWidthList(newWidthList);
+  useEffect(() => {
+    const textDiv: HTMLDivElement | null = textDivRef.current;
+    
+    if (textDiv){
+      
+      const outerSpans: any = textDiv.childNodes; // Select outer spans
 
-  // }, [finalDiv]);
+      const newWidthList = Array.from(outerSpans).map((outerSpan: any) => {
+        const innerSpans = outerSpan.getElementsByTagName("span"); // Select nested spans within the outer span
+        const widths = Array.from(innerSpans).map((span: any) => span.getBoundingClientRect().width);
+        return widths 
+      });
+   
+      setWidthList(newWidthList);
+    }
+  
+  }, [textDivRef]);
 
-  // useEffect(() => {
-  //   console.log("Effect is running!"); // Add this line
-  //   document.addEventListener("keydown", handleKeyPress);
 
-  //   // Clean up the event listener when the component unmounts
-  //   return () => {
-  //       document.removeEventListener("keydown", handleKeyPress);
-  //   };
-  //   }, [widthList, jumpIndex, lineIndex]);
+  
 
-  // const handleKeyPress = (event: KeyboardEvent) => {
-  //   if (event.key === finalDiv[lineIndex][letterIndex]) {
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    
+    return () => {
+        document.removeEventListener("keydown", handleKeyPress);
+    };
+    }, [widthList, jumpIndex, lineIndex]);
 
-  //     if (lineIndex >= widthList.length) {
-  //       // Reset lineIndex and jumpIndex when we reach the end
-  //       setLineIndex(0);
-  //       setJumpIndex(0);
-  //     }
 
-  //     const currentLine = widthList[lineIndex];
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.code === "Space") {
 
-  //     if (currentLine && currentLine.length > jumpIndex) {
-  //       setJump(currentLine[jumpIndex]);
+      
+      if (lineIndex >= widthList.length) {
+        setLineIndex(0);
+        setJumpIndex(0);
+      }
+  
+      const currentLine = widthList[lineIndex];
+  
+      if (currentLine && currentLine.length >= jumpIndex) {
 
-  //       setTranslateX((prevTranslateX) => {
-  //         return prevTranslateX + jump;
-  //       });
+        setJumpIndex((curIndex) => {
+          return curIndex + 1;
+        });
 
-  //       setJumpIndex((curIndex) => {
-  //         return curIndex + 1;
-  //       });
+  
+        setTranslateX((prevTranslateX) => {
+          return prevTranslateX + currentLine[jumpIndex];
+        });
+  
+       
+  
+        if (jumpIndex >= currentLine.length) {
+          setJumpIndex(0);
+          setLineIndex((curLineIndex) => {
+            return curLineIndex + 1;
+          });
 
-  //       if (jumpIndex >= currentLine.length - 1) {
-  //         setJumpIndex(0);
-  //         setLineIndex((curLineIndex) => {
-  //           return curLineIndex + 1;
-  //         });
+          setTranslateY((prevTranslateY) => {
+            return prevTranslateY + 37;
+          });
 
-  //         setTranslateY((prevTranslateY) => {
-  //           return prevTranslateY + 37;
-  //         });
+          setTranslateX(0);      
+        }
+      }
+    }
+  };
 
-  //         setTranslateX(0);
-
-  //       }
-
-  //       // console.log(lineIndex, jumpIndex, translateX, jump);
-  //     }
-
-  //   }
-  // };
-
+ 
   //---------------------------------------------------------------------------------------------------------------------
   const modifiedClass = `flex flex-col text-3xl tracking-widest w-fit h-fit ${textColour}`;
 
@@ -182,7 +197,7 @@ function TypingArea({ textColour }: textAreaProp) {
         {finalDiv}
       </div>
 
-      <Cursor textRef={textDivRef} />
+      <Cursor translateX={translateX} translateY={translateY} />
     </div>
   );
 }
