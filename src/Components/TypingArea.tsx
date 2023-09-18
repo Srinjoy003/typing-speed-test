@@ -49,9 +49,9 @@ function CreateFinalDiv() {
   const randomWords = ["apple", "banana", "chocolate", "dog", "elephant", "flower", "guitar", "happiness", "internet", "jazz", "kangaroo", "lighthouse", "mountain", "notebook", "ocean", "penguin", "quasar", "rainbow", "sunset", "tiger", "umbrella", "volcano", "watermelon", "xylophone", "yogurt", "zeppelin"];
 
   let len = randomWords.length;
-  let wordCount = 36; //36
-  let lineCount = 4; //4
-  let charCount = 60; //60
+  let wordCount = 5; //36
+  let lineCount = 2; //4
+  let charCount = 10; //60
   let wordList = [];
   const spaceChar = "&ensp;";
 
@@ -87,7 +87,7 @@ function CreateFinalDiv() {
 }
 
 function TypingArea({ textColour }: textAreaProp) {
-  const [finalDiv, setFinalDiv] = useState<any>(() => CreateFinalDiv());
+  const [finalDiv, setFinalDiv] = useState(() => CreateFinalDiv());
   // const [letterIndex, setLetterIndex] = useState(0);
   // const [lineIndex, setLineIndex] = useState(0);
 
@@ -96,12 +96,14 @@ function TypingArea({ textColour }: textAreaProp) {
   const cursorRef = useRef<HTMLDivElement>(null)
   
 
-  //------------------------------------------------------------------------------------------------------------------
   const [translateX, setTranslateX] = useState(0);
   const [translateY, setTranslateY] = useState(-134); //-133 -97
   const [widthList, setWidthList] = useState<any>([]);
   const [jumpIndex, setJumpIndex] = useState(0);
   const [lineIndex, setLineIndex] = useState(0);
+
+  const maxLineIndex = finalDiv.length;
+  // console.log(maxLineIndex)
 
 
 
@@ -149,13 +151,12 @@ function TypingArea({ textColour }: textAreaProp) {
   const handleKeyPress = (event: KeyboardEvent) => {
     if (event.code === "Space") {
 
-      
-      if (lineIndex >= widthList.length) {
-        setLineIndex(0);
-        setJumpIndex(0);
-      }
-  
       const currentLine = widthList[lineIndex];
+      
+      // if (lineIndex >= widthList.length) {
+      
+      // }
+  
   
       if (currentLine && currentLine.length >= jumpIndex) {
 
@@ -175,19 +176,35 @@ function TypingArea({ textColour }: textAreaProp) {
           setLineIndex((curLineIndex) => {
             return curLineIndex + 1;
           });
+          
+          if(lineIndex < widthList.length - 1){
+            setTranslateY((prevTranslateY) => {
+              return prevTranslateY + 37;
+            });
 
-          setTranslateY((prevTranslateY) => {
-            return prevTranslateY + 37;
-          });
-
+          }
+          
+          else{
+            setFinalDiv(() => CreateFinalDiv());
+            setTranslateY(-134);
+            setJumpIndex(0);
+            setLineIndex(0);
+          }
+          
           setTranslateX(0);      
+
+
         }
+        
+       
+
+        console.log(lineIndex, maxLineIndex)
+
       }
     }
   };
 
  
-  //---------------------------------------------------------------------------------------------------------------------
   const modifiedClass = `flex flex-col text-3xl tracking-widest w-fit h-fit ${textColour}`;
 
   return (
