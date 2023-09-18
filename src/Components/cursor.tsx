@@ -4,36 +4,43 @@ type CursorProp = {textRef ?: any; translatePos?: Array<number>; xJump?: number;
   
 
 
-function Cursor({ xJump, textRef}: CursorProp) {
+function Cursor({textRef}: CursorProp) {
     const [translateX, setTranslateX] = useState(0);
     const [translateY, setTranslateY] = useState(-134); //-133 -97
     const [widthList, setWidthList] = useState<any>([]);
-    const [jump, setJump] = useState<number>(0);
     const [jumpIndex, setJumpIndex] = useState(0);
     const [lineIndex, setLineIndex] = useState(0);
 
 
     const cursorRef = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
+    const moveCursor = () => {
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
       }
+    };  
+
+
+    useEffect(() => {
+        moveCursor();
     }, [translateX, translateY]);
 
     useEffect(() => {
       const textDiv: HTMLDivElement = textRef.current;
-      const outerSpans = textDiv.querySelectorAll("span"); // Select outer spans
+      const outerSpans: any = textDiv.childNodes; // Select outer spans
 
-      const newWidthList = Array.from(outerSpans).map((outerSpan) => {
-        const innerSpans = outerSpan.querySelectorAll("span"); // Select nested spans within the outer span
-        const widths = Array.from(innerSpans).map((span) => span.getBoundingClientRect().width);
-        return widths.length > 0 ? widths : null;
-      }).filter(Boolean); // Filter out null values
+
+      const newWidthList = Array.from(outerSpans).map((outerSpan: any) => {
+        const innerSpans = outerSpan.getElementsByTagName("span"); // Select nested spans within the outer span
+        const widths = Array.from(innerSpans).map((span: any) => span.getBoundingClientRect().width);
+        return widths 
+      });
      
       
 
       setWidthList(newWidthList);
+     
+      console.log(newWidthList[0]?.length)
 
     
     }, [textRef]);
@@ -42,10 +49,8 @@ function Cursor({ xJump, textRef}: CursorProp) {
     
 
     useEffect(() => {
-      console.log("Effect is running!"); // Add this line
       document.addEventListener("keydown", handleKeyPress);
       
-      // Clean up the event listener when the component unmounts
       return () => {
           document.removeEventListener("keydown", handleKeyPress);
       };
@@ -64,18 +69,23 @@ function Cursor({ xJump, textRef}: CursorProp) {
     
         const currentLine = widthList[lineIndex];
     
-        if (currentLine && currentLine.length > jumpIndex) {
-          setJump(currentLine[jumpIndex]);
-    
-          setTranslateX((prevTranslateX) => {
-            return prevTranslateX + jump;
-          });
-    
+        if (currentLine && currentLine.length >= jumpIndex) {
+
           setJumpIndex((curIndex) => {
             return curIndex + 1;
           });
+
+          // setJump(currentLine[jumpIndex]);
     
-          if (jumpIndex >= currentLine.length - 1) {
+          setTranslateX((prevTranslateX) => {
+            return prevTranslateX + currentLine[jumpIndex];
+          });
+    
+         
+
+
+    
+          if (jumpIndex >= currentLine.length) {
             setJumpIndex(0);
             setLineIndex((curLineIndex) => {
               return curLineIndex + 1;
@@ -89,8 +99,10 @@ function Cursor({ xJump, textRef}: CursorProp) {
              
 
           }
+
+
+
     
-          // console.log(lineIndex, jumpIndex, translateX, jump);
         }
     
     

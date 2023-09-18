@@ -49,8 +49,9 @@ function CreateFinalDiv() {
   const randomWords = ["apple", "banana", "chocolate", "dog", "elephant", "flower", "guitar", "happiness", "internet", "jazz", "kangaroo", "lighthouse", "mountain", "notebook", "ocean", "penguin", "quasar", "rainbow", "sunset", "tiger", "umbrella", "volcano", "watermelon", "xylophone", "yogurt", "zeppelin"];
 
   let len = randomWords.length;
-  let wordCount = 36;
-  let lineCount = 4;
+  let wordCount = 36; //36
+  let lineCount = 4; //4
+  let charCount = 60; //60
   let wordList = [];
   const spaceChar = "&ensp;";
 
@@ -62,7 +63,7 @@ function CreateFinalDiv() {
 
   wordList.pop();
 
-  let lineList = LineSeparator(wordList, 60).slice(0, lineCount);
+  let lineList = LineSeparator(wordList, charCount).slice(0, lineCount);
   let finalList = CharacterSeparator(lineList);
   finalList = finalList.map((row) => {
     return row.map((str) => {
@@ -86,8 +87,8 @@ function CreateFinalDiv() {
 }
 
 function TypingArea({ textColour }: textAreaProp) {
-  const [finalDiv, setFinalDiv] = useState(() => CreateFinalDiv());
-  const [jumpIndex, setJumpIndex] = useState(0);
+  const [finalDiv, setFinalDiv] = useState<any>(() => CreateFinalDiv());
+  const [letterIndex, setLetterIndex] = useState(0);
   const [lineIndex, setLineIndex] = useState(0);
 
   // let finalDiv = CreateFinalDiv();
@@ -130,7 +131,7 @@ function TypingArea({ textColour }: textAreaProp) {
   //   }, [widthList, jumpIndex, lineIndex]);
 
   // const handleKeyPress = (event: KeyboardEvent) => {
-  //   if (event.code === "Space") {
+  //   if (event.key === finalDiv[lineIndex][letterIndex]) {
 
   //     if (lineIndex >= widthList.length) {
   //       // Reset lineIndex and jumpIndex when we reach the end
