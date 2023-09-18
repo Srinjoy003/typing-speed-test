@@ -165,14 +165,17 @@ function TypingArea({ textColour }: textAreaProp) {
 
   const handleKeyPress = (event: KeyboardEvent) => {
     // console.log("a",finalDivSpans[lineIndex][jumpIndex].innerHTML,"a", event.key, "a")
-    const currentLine = widthList[lineIndex];
-    const curLetter = finalDivSpans[lineIndex][jumpIndex].innerHTML;
-    console.log(jumpIndex,currentLine.length)
+    const currentLineWidthList = widthList[lineIndex];
+    const currentLineText = finalDivSpans[lineIndex];
+
+    const curLetter = (currentLineText && jumpIndex < currentLineText.length) ? currentLineText[jumpIndex].innerHTML : undefined;
+    // const curLetter = finalDivSpans[lineIndex][jumpIndex].innerHTML;
+    console.log(jumpIndex,currentLineWidthList.length)
     
-    if ((curLetter && event.key === curLetter) || (curLetter && event.key === " " && curLetter === String.fromCharCode(8194)) || (event.key === "Enter" && jumpIndex === currentLine.length)) {
+    if ((event.key === "Enter" && jumpIndex === currentLineWidthList.length) || (curLetter && event.key === curLetter) || (curLetter && event.key === " " && curLetter === String.fromCharCode(8194))) {
       
   
-      if (currentLine && currentLine.length >= jumpIndex) {
+      if (currentLineWidthList && currentLineWidthList.length >= jumpIndex) {
 
 
         setJumpIndex((curIndex) => {
@@ -181,12 +184,13 @@ function TypingArea({ textColour }: textAreaProp) {
 
   
         setTranslateX((prevTranslateX) => {
-          return prevTranslateX + currentLine[jumpIndex];
+          return prevTranslateX + currentLineWidthList[jumpIndex];
         });
   
        
   
-        if (jumpIndex >= currentLine.length) {
+        if (jumpIndex >= currentLineWidthList.length) {
+          
           setJumpIndex(0);
           setLineIndex((curLineIndex) => {
             return curLineIndex + 1;
