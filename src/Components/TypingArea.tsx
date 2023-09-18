@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import Cursor from "./cursor";
+import { ReactNode } from "react";
 
 type textAreaProp = { textColour: string };
 
@@ -49,11 +50,11 @@ function CreateFinalDiv() {
   const randomWords = ["apple", "banana", "chocolate", "dog", "elephant", "flower", "guitar", "happiness", "internet", "jazz", "kangaroo", "lighthouse", "mountain", "notebook", "ocean", "penguin", "quasar", "rainbow", "sunset", "tiger", "umbrella", "volcano", "watermelon", "xylophone", "yogurt", "zeppelin"];
 
   let len = randomWords.length;
-  let wordCount = 5; //36
-  let lineCount = 2; //4
-  let charCount = 10; //60
+  let wordCount = 36; //36
+  let lineCount = 4; //4
+  let charCount = 60; //60
   let wordList = [];
-  const spaceChar = "&ensp;";
+  const spaceChar = "&ensp;"; //8194
 
   for (let i = 0; i < wordCount; i++) {
     let randomIndex = Math.floor(Math.random() * len) % wordCount;
@@ -86,8 +87,15 @@ function CreateFinalDiv() {
   return finalDiv;
 }
 
+
+
+
 function TypingArea({ textColour }: textAreaProp) {
   const [finalDiv, setFinalDiv] = useState(() => CreateFinalDiv());
+  const [finalDivSpans, setFinalDivSpans] = useState<HTMLSpanElement[][]>([]);
+  
+
+
   // const [letterIndex, setLetterIndex] = useState(0);
   // const [lineIndex, setLineIndex] = useState(0);
 
@@ -103,7 +111,6 @@ function TypingArea({ textColour }: textAreaProp) {
   const [lineIndex, setLineIndex] = useState(0);
 
   const maxLineIndex = finalDiv.length;
-  // console.log(maxLineIndex)
 
 
 
@@ -130,11 +137,16 @@ function TypingArea({ textColour }: textAreaProp) {
         const widths = Array.from(innerSpans).map((span: any) => span.getBoundingClientRect().width);
         return widths 
       });
+
+      const newFinalDivSpans = Array.from(outerSpans).map((outerSpan: any) => {
+        return outerSpan.getElementsByTagName("span"); // Select nested spans within the outer span
+      });
    
       setWidthList(newWidthList);
+      setFinalDivSpans(newFinalDivSpans);
     }
   
-  }, [textDivRef]);
+  }, [textDivRef]); //errro possible
 
 
   
@@ -147,18 +159,21 @@ function TypingArea({ textColour }: textAreaProp) {
     };
     }, [widthList, jumpIndex, lineIndex]);
 
+  
+
+
 
   const handleKeyPress = (event: KeyboardEvent) => {
-    if (event.code === "Space") {
-
-      const currentLine = widthList[lineIndex];
+    // console.log("a",finalDivSpans[lineIndex][jumpIndex].innerHTML,"a", event.key, "a")
+    const currentLine = widthList[lineIndex];
+    const curLetter = finalDivSpans[lineIndex][jumpIndex].innerHTML;
+    console.log(jumpIndex,currentLine.length)
+    
+    if ((curLetter && event.key === curLetter) || (curLetter && event.key === " " && curLetter === String.fromCharCode(8194)) || (event.key === "Enter" && jumpIndex === currentLine.length)) {
       
-      // if (lineIndex >= widthList.length) {
-      
-      // }
-  
   
       if (currentLine && currentLine.length >= jumpIndex) {
+
 
         setJumpIndex((curIndex) => {
           return curIndex + 1;
@@ -198,10 +213,12 @@ function TypingArea({ textColour }: textAreaProp) {
         
        
 
-        console.log(lineIndex, maxLineIndex)
+        // console.log(lineIndex, maxLineIndex)
 
       }
     }
+
+    
   };
 
  
