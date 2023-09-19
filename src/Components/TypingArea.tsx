@@ -1,6 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 import Cursor from "./cursor";
-import { ReactNode } from "react";
+import { v4 as uuid } from 'uuid';
+
+
+let global = 0;
 
 type textAreaProp = { textColour: string; textColourCorrect: string, textColourIncorrect: string};
 
@@ -46,13 +49,13 @@ function LineSeparator(wordList: Array<string>, charCount: number) {
   return lineList;
 }
 
-function CreateFinalDiv() {
+function FinalDiv(wordCount: number, lineCount: number, charCount: number, textColour) {
   const randomWords = ["apple", "banana", "chocolate", "dog", "elephant", "flower", "guitar", "happiness", "internet", "jazz", "kangaroo", "lighthouse", "mountain", "notebook", "ocean", "penguin", "quasar", "rainbow", "sunset", "tiger", "umbrella", "volcano", "watermelon", "xylophone", "yogurt", "zeppelin"];
 
   let len = randomWords.length;
-  let wordCount = 36; //36
-  let lineCount = 4; //4
-  let charCount = 60; //60
+  // let wordCount = 36; //36
+  // let lineCount = 4; //4
+  // let charCount = 60; //60
   let wordList = [];
   const spaceChar = "&ensp;"; //8194
 
@@ -75,45 +78,55 @@ function CreateFinalDiv() {
   let finalDiv = finalList.map((subArray, rowIndex) => {
     let subSpan = subArray.map((character, colIndex) => {
       if (character === spaceChar) {
-        return <span key={colIndex} dangerouslySetInnerHTML={{ __html: spaceChar }}></span>;
-      } else {
-        return <span key={colIndex}>{character}</span>;
+        return <span className={`${textColour}`} key={uuid()} dangerouslySetInnerHTML={{ __html: spaceChar }}></span>;
+      } 
+      
+      else {
+        return <span className={`${textColour}`} key={uuid()}>{character}</span>;
       }
     });
 
-    return <span key={rowIndex}> {subSpan} </span>;
+    return <span key={uuid()}> {subSpan} </span>;
   });
+
+  global++;
 
   return finalDiv;
 }
 
 
+  
+
 
 
 function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: textAreaProp) {
+  
+  const CreateFinalDiv = () => FinalDiv(100, 4, 60, textColour) //30,10,60
+
+
   const [finalDiv, setFinalDiv] = useState(() => CreateFinalDiv());
   const [finalDivSpans, setFinalDivSpans] = useState<HTMLSpanElement[][]>([]);
-  
-
-
-  // const [letterIndex, setLetterIndex] = useState(0);
-  // const [lineIndex, setLineIndex] = useState(0);
-
-  // let finalDiv = CreateFinalDiv();
-  const textDivRef = useRef<HTMLDivElement | null>(null);
-  const cursorRef = useRef<HTMLDivElement>(null)
-  
-
   const [translateX, setTranslateX] = useState(0);
   const [translateY, setTranslateY] = useState(-134); //-133 -97
   const [widthList, setWidthList] = useState<any>([]);
   const [jumpIndex, setJumpIndex] = useState(0);
   const [lineIndex, setLineIndex] = useState(0);
   
+  const [wordCount, setWordCount] = useState(0);
+  const [wpm, setWpm] = useState(0);
 
+  
+  const textDivRef = useRef<HTMLDivElement | null>(null);
+  const cursorRef = useRef<HTMLDivElement>(null)
+  
   let isWrong = false;
+  
+  let totalWords = 30;
+  let correctChar = 0;
+  let startTime: Date|null = null;
+  let endTIme: Date|null = null;
 
-
+  
 
   const moveCursor = () => {
     if (cursorRef.current) {
@@ -147,7 +160,7 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
       setFinalDivSpans(newFinalDivSpans);
     }
   
-  }, [textDivRef]); //errro possible
+  }, [textDivRef, finalDiv]); //errro possible
 
 
   
@@ -165,7 +178,7 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
 
 
   const handleKeyPress = (event: KeyboardEvent) => {
-    // console.log("a",finalDivSpans[lineIndex][jumpIndex].innerHTML,"a", event.key, "a")
+    console.log(jumpIndex, lineIndex);
     const currentLineWidthList = widthList[lineIndex];
     const currentLineText = finalDivSpans[lineIndex];
     
@@ -173,18 +186,32 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
     
     if ((event.key === "Enter" && jumpIndex === currentLineWidthList.length) || (curSpan && event.key === curSpan.innerHTML) || (curSpan && event.key === " " && curSpan.innerHTML === String.fromCharCode(8194))) {
       
+      if ((curSpan && event.key === " " && curSpan.innerHTML === String.fromCharCode(8194)) || (event.key === "Enter" && jumpIndex === currentLineWidthList.length)){
+        setWordCount((curWordCount) => {
+          return curWordCount + 1;
+        });
+      }
       
-      if(isWrong)
+      
+      if(isWrong){
         curSpan?.classList.add(textColourIncorrect);
+        curSpan?.classList.remove(textColour);
+        
+        // curSpan?.classList.add(textColourCorrect);
+
+        // curSpan?.classList.remove(textColourCorrect);  
+
+      }
       
       else
         curSpan?.classList.add(textColourCorrect);  
+        curSpan?.classList.remove(textColour);
+
 
       isWrong = false      
+      correctChar += 1;
       
 
-      
-    
       
       if (currentLineWidthList && currentLineWidthList.length >= jumpIndex) {
 
@@ -196,6 +223,12 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
         setTranslateX((prevTranslateX) => {
           return prevTranslateX + currentLineWidthList[jumpIndex];
         });
+        
+
+        if((lineIndex != 0 || jumpIndex != 0) && startTime === null){
+          startTime = new Date();
+        }
+        
   
        
   
@@ -218,23 +251,28 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
             setTranslateY(-134);
             setJumpIndex(0);
             setLineIndex(0);
+            setWordCount(0);
+
+            endTIme = new Date();
+            
+            setWpm(() => {
+              return (endTIme - startTime) / 60000
+            });
+            
+            startTime = null;
+            endTIme = null;
+            
           }
           
           setTranslateX(0);      
 
-
         }
         
-       
-
-        // console.log(lineIndex, maxLineIndex)
-
       }
     }
 
     else{
       isWrong = true
-
   
     }
 
@@ -242,13 +280,14 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
   };
 
  
-  const modifiedClass = `flex flex-col text-3xl tracking-widest w-fit h-fit ${textColour}`;
+  const modifiedClass = `flex flex-col text-3xl tracking-widest w-fit h-fit`;
 
   return (
     <div className="w-3/4">
-      <input type="text" className="absolute hidden w-40 h-40 bg-gray-300 left-10"></input>
+      <div className="text-2xl text-dolphin-bright">Time: {wpm}</div>
+      <div className="text-2xl text-dolphin-btn">{wordCount} / {totalWords}</div>
       <div ref={textDivRef} className={modifiedClass}>
-        {finalDiv}
+        {...finalDiv}
       </div>
 
       <Cursor translateX={translateX} translateY={translateY} />
