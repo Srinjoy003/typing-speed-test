@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import Cursor from "./cursor";
 import { ReactNode } from "react";
 
-type textAreaProp = { textColour: string };
+type textAreaProp = { textColour: string; textColourCorrect: string, textColourIncorrect: string};
 
 function CharacterSeparator(lineList: Array<Array<string>>) {
   let charList = [];
@@ -90,7 +90,7 @@ function CreateFinalDiv() {
 
 
 
-function TypingArea({ textColour }: textAreaProp) {
+function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: textAreaProp) {
   const [finalDiv, setFinalDiv] = useState(() => CreateFinalDiv());
   const [finalDivSpans, setFinalDivSpans] = useState<HTMLSpanElement[][]>([]);
   
@@ -109,8 +109,9 @@ function TypingArea({ textColour }: textAreaProp) {
   const [widthList, setWidthList] = useState<any>([]);
   const [jumpIndex, setJumpIndex] = useState(0);
   const [lineIndex, setLineIndex] = useState(0);
+  
 
-  const maxLineIndex = finalDiv.length;
+  let isWrong = false;
 
 
 
@@ -160,23 +161,32 @@ function TypingArea({ textColour }: textAreaProp) {
     }, [widthList, jumpIndex, lineIndex]);
 
   
-
+  
 
 
   const handleKeyPress = (event: KeyboardEvent) => {
     // console.log("a",finalDivSpans[lineIndex][jumpIndex].innerHTML,"a", event.key, "a")
     const currentLineWidthList = widthList[lineIndex];
     const currentLineText = finalDivSpans[lineIndex];
-
-    const curLetter = (currentLineText && jumpIndex < currentLineText.length) ? currentLineText[jumpIndex].innerHTML : undefined;
-    // const curLetter = finalDivSpans[lineIndex][jumpIndex].innerHTML;
-    console.log(jumpIndex,currentLineWidthList.length)
     
-    if ((event.key === "Enter" && jumpIndex === currentLineWidthList.length) || (curLetter && event.key === curLetter) || (curLetter && event.key === " " && curLetter === String.fromCharCode(8194))) {
+    const curSpan = (currentLineText && jumpIndex < currentLineText.length) ? currentLineText[jumpIndex]: undefined;
+    
+    if ((event.key === "Enter" && jumpIndex === currentLineWidthList.length) || (curSpan && event.key === curSpan.innerHTML) || (curSpan && event.key === " " && curSpan.innerHTML === String.fromCharCode(8194))) {
       
-  
-      if (currentLineWidthList && currentLineWidthList.length >= jumpIndex) {
+      
+      if(isWrong)
+        curSpan?.classList.add(textColourIncorrect);
+      
+      else
+        curSpan?.classList.add(textColourCorrect);  
 
+      isWrong = false      
+      
+
+      
+    
+      
+      if (currentLineWidthList && currentLineWidthList.length >= jumpIndex) {
 
         setJumpIndex((curIndex) => {
           return curIndex + 1;
@@ -220,6 +230,12 @@ function TypingArea({ textColour }: textAreaProp) {
         // console.log(lineIndex, maxLineIndex)
 
       }
+    }
+
+    else{
+      isWrong = true
+
+  
     }
 
     

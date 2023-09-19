@@ -10,4 +10,6 @@ export const colour = {
     'dolphin-btn': 'rgb(255, 206, 251)',
     'dolphin-bright': 'rgb(130,234,255)',
     'dolphin-test': 'rgb(255,151,130)',
+    'dolphin-wrong': 'rgb(255,141,230)',
+
 };  
