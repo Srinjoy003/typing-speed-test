@@ -69,7 +69,7 @@ function FinalDiv(wordCount: number, lineCount: number, charCount: number, textC
 
     let puncRandom = Math.floor(Math.random() * 5);
     let capsRandom = Math.floor(Math.random() * 5);
-    let numsRandom = Math.floor(Math.random() * 5);
+    let numRandom = Math.floor(Math.random() * 5);
 
     if (isCaps && capsRandom === 4) {
       word = word[0].toUpperCase() + word.slice(1);
@@ -86,6 +86,9 @@ function FinalDiv(wordCount: number, lineCount: number, charCount: number, textC
       if (punctuation === ")") 
         word = "(" + word;
     }
+
+    if (isNum && numRandom === 4)
+      word = number.toString()
 
 
     wordList.push(word);

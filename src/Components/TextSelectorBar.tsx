@@ -4,9 +4,9 @@ function TextSelectorBar({puncChangeFunc, numChangeFunc, capsChangeFunc}: Select
  
   return (
     <div className='flex flex-row gap-4'>
-      <button className='' onClick={puncChangeFunc}>punctuation</button>
-      <button className='' onClick={numChangeFunc}>numbers</button>
-      <button className='' onClick={capsChangeFunc}>caps</button>
+      <button className='outline-none' onClick={puncChangeFunc}>punctuation</button>
+      <button className='outline-none' onClick={numChangeFunc}>numbers</button>
+      <button className='outline-none' onClick={capsChangeFunc}>caps</button>
 
     </div>
   )
