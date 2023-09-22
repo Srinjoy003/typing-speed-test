@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import Cursor from "./cursor";
 import { v4 as uuid } from 'uuid';
+import TextSelectorBar from "./TextSelectorBar";
 
 
-let global = 0;
+
 
 type textAreaProp = { textColour: string; textColourCorrect: string, textColourIncorrect: string};
 
@@ -49,10 +50,9 @@ function LineSeparator(wordList: Array<string>, charCount: number) {
   return lineList;
 }
 
-function FinalDiv(wordCount: number, lineCount: number, charCount: number, textColour) {
+function FinalDiv(wordCount: number, lineCount: number, charCount: number, textColour: string, isPunc: boolean, isNum: boolean, isCaps: boolean) {
   const randomWords = ["apple", "banana", "chocolate", "dog", "elephant", "flower", "guitar", "happiness", "internet", "jazz", "kangaroo", "lighthouse", "mountain", "notebook", "ocean", "penguin", "quasar", "rainbow", "sunset", "tiger", "umbrella", "volcano", "watermelon", "xylophone", "yogurt", "zeppelin"];
-
-  let len = randomWords.length;
+  const randomPunc = ["?", "!", ",", ".", "'"]
   // let wordCount = 36; //36
   // let lineCount = 4; //4
   // let charCount = 60; //60
@@ -60,9 +60,25 @@ function FinalDiv(wordCount: number, lineCount: number, charCount: number, textC
   const spaceChar = "&ensp;"; //8194
 
   for (let i = 0; i < wordCount; i++) {
-    let randomIndex = Math.floor(Math.random() * len) % wordCount;
-    wordList.push(randomWords[randomIndex]);
+    
+    let randomWordIndex = Math.floor(Math.random() * randomWords.length);
+    let randomPuncIndex = Math.floor(Math.random() * randomPunc.length);
+    
+    let word = randomWords[randomWordIndex];
+    let punctuation = randomPunc[randomPuncIndex];
+    let finalWord = word;
+
+    if (isPunc){
+      finalWord += punctuation
+      if (punctuation === "'")
+        finalWord = punctuation + finalWord;
+    }
+
+
+    wordList.push(finalWord);
+
     wordList.push(" ");
+    
   }
 
   wordList.pop();
@@ -89,7 +105,7 @@ function FinalDiv(wordCount: number, lineCount: number, charCount: number, textC
     return <span key={uuid()}> {subSpan} </span>;
   });
 
-  global++;
+ 
 
   return finalDiv;
 }
@@ -101,10 +117,15 @@ function FinalDiv(wordCount: number, lineCount: number, charCount: number, textC
 
 function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: textAreaProp) {
   
-  const CreateFinalDiv = () => FinalDiv(100, 4, 60, textColour) //30,10,60
+  const CreateFinalDiv = (isPunc: boolean, isNum: boolean, isCaps: boolean) => {
+    return FinalDiv(100, 4, 60, textColour, isPunc, isNum, isCaps)
+  } //30,10,60
 
-
-  const [finalDiv, setFinalDiv] = useState(() => CreateFinalDiv());
+  const [punc, setPunc] = useState(false);
+  const [num, setNum] = useState(false);
+  const [caps, setCaps] = useState(false);
+  
+  const [finalDiv, setFinalDiv] = useState(() => CreateFinalDiv(punc, num, caps));
   const [finalDivSpans, setFinalDivSpans] = useState<HTMLSpanElement[][]>([]);
   const [translateX, setTranslateX] = useState(0);
   const [translateY, setTranslateY] = useState(-134); //-133 -97
@@ -117,22 +138,46 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
 
   
   const textDivRef = useRef<HTMLDivElement | null>(null);
-  const cursorRef = useRef<HTMLDivElement>(null)
+  const cursorRef = useRef<HTMLDivElement>(null);
   
   let isWrong = false;
   
   let totalWords = 30;
   let correctChar = 0;
-  let startTime: Date|null = null;
-  let endTIme: Date|null = null;
 
-  
+
+
 
   const moveCursor = () => {
     if (cursorRef.current) {
       cursorRef.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
     }
   };  
+
+  const handlePuncChange = () => {
+    setPunc((currPunc) => {
+      return !currPunc;
+    });
+    
+    setFinalDiv(() => CreateFinalDiv(punc, num, caps));
+    
+  }
+
+  const handleNumChange = () => {
+    setNum((currNum) => {
+      return !currNum;
+    });
+    
+    setFinalDiv(() => CreateFinalDiv(punc, num, caps));
+  };
+
+  const handleCapsChange = () => {
+    setCaps((currCaps) => {
+      return !currCaps;
+    });
+    
+    setFinalDiv(() => CreateFinalDiv(punc, num, caps));
+  };
 
 
   useEffect(() => {
@@ -160,7 +205,7 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
       setFinalDivSpans(newFinalDivSpans);
     }
   
-  }, [textDivRef, finalDiv]); //errro possible
+  }, [textDivRef, finalDiv]); 
 
 
   
@@ -196,11 +241,6 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
       if(isWrong){
         curSpan?.classList.add(textColourIncorrect);
         curSpan?.classList.remove(textColour);
-        
-        // curSpan?.classList.add(textColourCorrect);
-
-        // curSpan?.classList.remove(textColourCorrect);  
-
       }
       
       else
@@ -224,12 +264,7 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
           return prevTranslateX + currentLineWidthList[jumpIndex];
         });
         
-
-        if((lineIndex != 0 || jumpIndex != 0) && startTime === null){
-          startTime = new Date();
-        }
-        
-  
+      
        
   
         if (jumpIndex >= currentLineWidthList.length) {
@@ -247,20 +282,12 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
           }
           
           else{
-            setFinalDiv(() => CreateFinalDiv());
+            setFinalDiv(() => CreateFinalDiv(punc, num, caps));
             setTranslateY(-134);
             setJumpIndex(0);
             setLineIndex(0);
             setWordCount(0);
 
-            endTIme = new Date();
-            
-            setWpm(() => {
-              return (endTIme - startTime) / 60000
-            });
-            
-            startTime = null;
-            endTIme = null;
             
           }
           
@@ -284,7 +311,7 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
 
   return (
     <div className="w-3/4">
-      <div className="text-2xl text-dolphin-bright">Time: {wpm}</div>
+      <TextSelectorBar puncChangeFunc={handlePuncChange}/>
       <div className="text-2xl text-dolphin-btn">{wordCount} / {totalWords}</div>
       <div ref={textDivRef} className={modifiedClass}>
         {...finalDiv}
@@ -296,3 +323,4 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
 }
 
 export default TypingArea;
+export {};
