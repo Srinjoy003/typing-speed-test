@@ -162,26 +162,26 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
       cursorRef.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
     }
   };
+  
 
   const handlePuncChange = () => {
     setPunc((currPunc) => {   
       return !currPunc;
-    });
-    
+    });  
   };
+  
 
   const handleNumChange = () => {
     setNum((currNum) => {
       return !currNum;
     });
-
   };
+  
 
   const handleCapsChange = () => {
     setCaps((currCaps) => {
       return !currCaps;
     });
-
   };
 
   useEffect(() => {
@@ -228,13 +228,16 @@ function TypingArea({ textColour, textColourCorrect, textColourIncorrect }: text
   }, [widthList, jumpIndex, lineIndex]);
 
   const handleKeyPress = (event: KeyboardEvent) => {
-    event.preventDefault();
     const currentLineWidthList = widthList[lineIndex];
     const currentLineText = finalDivSpans[lineIndex];
 
     const curSpan = currentLineText && jumpIndex < currentLineText.length ? currentLineText[jumpIndex] : undefined;
 
+    if (event.key === " ")
+      event.preventDefault();
+      
     if ((event.key === "Enter" && jumpIndex === currentLineWidthList.length) || (curSpan && event.key === curSpan.innerHTML) || (curSpan && event.key === " " && curSpan.innerHTML === String.fromCharCode(8194))) {
+            
       if ((curSpan && event.key === " " && curSpan.innerHTML === String.fromCharCode(8194)) || (event.key === "Enter" && jumpIndex === currentLineWidthList.length)) {
         setWordCount((curWordCount) => {
           return curWordCount + 1;
